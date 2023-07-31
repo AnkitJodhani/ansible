@@ -1,0 +1,30 @@
+---
+- name: configureing dbserver
+  hosts: dbserver
+  become: yes
+  tasks:
+    - name: installing mysql 
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present
+
+    - name: starting database service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name : instaling dependancy
+      ansible.builtin.yum:
+        name: python3-PyMySQL
+        state: present
+
+    - name: Create a new database with name 'ankit'
+      mysql_db:
+        name: 
+          - ankit
+          - jodhani
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+
+

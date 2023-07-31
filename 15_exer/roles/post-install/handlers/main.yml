@@ -1,0 +1,15 @@
+---
+# handlers file for post-install
+
+- name: Services should be restarted in CentOS
+  service:
+    name: chronyd
+    state: restarted
+  when: ansible_distribution == 'CentOS'
+
+- name: Services should be restarted in Ubuntu
+  service:
+    name: ntp
+    state: restarted
+  when: ansible_distribution == 'Ubuntu'
+

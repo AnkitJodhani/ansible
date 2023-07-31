@@ -1,0 +1,41 @@
+---
+- name: configureing dbserver
+  hosts: dbserver
+  become: yes
+  vars:
+    dbname1: piyush 
+    dbname2: sachdeva
+  tasks:
+    - name: installing mysql 
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present
+
+    - name: starting database service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name : instaling dependancy
+      ansible.builtin.yum:
+        name: python3-PyMySQL
+        state: present
+
+    - name: printing variable
+      debug:
+        msg: "{{dbname1}}"
+
+    - name: Create a new database
+      mysql_db:
+        name: 
+          - "{{dbname1}}"
+          - "{{dbname2}}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+      register: dbout
+    - name: lets try to print what above register dbout stored
+      debug:
+        msg: "{{dbout}}"
+  
+

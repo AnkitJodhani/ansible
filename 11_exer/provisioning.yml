@@ -1,0 +1,24 @@
+---
+- name: Provisioning server
+  hosts: all
+  become: yes
+  tasks:
+    - name: NTP agent on CentOS machine
+      yum:
+        name: chrony
+        state: present
+      when: ansible_distribution == 'CentOS'
+    
+    - name: NTP agent on CentOS machine
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+      when: ansible_distribution == 'CentOS'
+
+    - name: NTP agent on Ubutnu Machine
+      apt:
+        name: ntp
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'

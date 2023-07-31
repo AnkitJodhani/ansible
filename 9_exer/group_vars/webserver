@@ -1,0 +1,3 @@
+var1: comming from group_vars/webserver
+var2: comming from group_vars/webserver
+

@@ -1,0 +1,12 @@
+---
+- name: learning about fact varialbe
+  hosts: all
+  become: yes
+  tasks:
+    - name: printing varialbe
+      debug:
+        var: ansible_distribution
+
+    - name: printing varialbe
+      debug:
+        var: ansible_memory_mb['real']

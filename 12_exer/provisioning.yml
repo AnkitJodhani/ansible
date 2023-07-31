@@ -1,0 +1,41 @@
+---
+- name: Provisioning server
+  hosts: all
+  become: yes
+  tasks:
+    - name: NTP agent on CentOS machine
+      yum:
+        name: '{{item}}'
+        state: present
+      when: ansible_distribution == 'CentOS'
+      loop:
+        - chrony
+        - zip
+        - unzip
+        - wget
+        - git
+        - httpd
+    
+    - name: NTP agent on CentOS machine
+      service:
+        name: '{{item}}'
+        state: started
+        enabled: yes
+      when: ansible_distribution == 'CentOS'
+      loop:
+        - chronyd
+        - httpd
+
+    - name: NTP agent on Ubutnu Machine
+      apt:
+        name: '{{item}}'
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
+      loop:
+        - ntp
+        - zip
+        - unzip
+        - wget
+        - git
+        - apache2

@@ -1,0 +1,8 @@
+---
+- name: Provisioning server
+  hosts: all
+  become: yes
+  roles:
+    - role: post-install
+      vars:
+        path_foler: /tmp/foo_folder

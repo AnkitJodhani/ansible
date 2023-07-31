@@ -1,0 +1,72 @@
+---
+- name: Provisioning server
+  hosts: all
+  become: yes
+  tasks:
+    - name: NTP agent on CentOS machine
+      yum:
+        name: '{{item}}'
+        state: present
+      when: ansible_distribution == 'CentOS'
+      loop:
+        - chrony
+        - zip
+        - unzip
+        - wget
+        - git
+        - httpd
+    
+    - name: NTP agent on CentOS machine
+      service:
+        name: '{{item}}'
+        state: started
+        enabled: yes
+      when: ansible_distribution == 'CentOS'
+      loop:
+        - chronyd
+        - httpd
+
+    - name: NTP agent on Ubutnu Machine
+      apt:
+        name: '{{item}}'
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
+      loop:
+        - ntp
+        - zip
+        - unzip
+        - wget
+        - git
+        - apache2
+
+    - name: Copy file with owner and permissions
+      copy:
+        content: 'This machine is managed by the Ansible control machine DO NOT CHANGE ANYTHING MANUALLY'
+        dest: /etc/motd
+
+    - name: NTP configurations to CentOS machine
+      template:
+        src: templates/ntp_conf_centos.conf
+        dest: /etc/chrony.conf
+        backup: yes
+      when: ansible_distribution == "CentOS"
+
+    - name: NTP configuration to Ubuntu machine
+      template: 
+        src: templates/ntp_conf_ubuntu.conf
+        dest: /etc/ntp.conf
+      when: ansible_distribution == "Ubuntu"
+
+
+    - name: Services should be restarted in CentOS
+      service:
+        name: chronyd
+        state: restarted
+      when: ansible_distribution == 'CentOS'
+    
+    - name: Services should be restarted in Ubuntu
+      service:
+        name: ntp
+        state: restarted
+      when: ansible_distribution == 'Ubuntu'
